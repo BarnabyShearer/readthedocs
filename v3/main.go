@@ -105,14 +105,14 @@ func (c *Client) GetProjects(ctx context.Context) ([]Project, error) {
 	return projects.Results, err
 }
 
-func (c *Client) GetProject(ctx context.Context, projectName string) (Project, error) {
+func (c *Client) GetProject(ctx context.Context, slug string) (Project, error) {
 	project := Project{}
-	err := c.sendRequest(ctx, "GET", fmt.Sprintf("/projects/%s/", projectName), nil, &project)
+	err := c.sendRequest(ctx, "GET", fmt.Sprintf("/projects/%s/", slug), nil, &project)
 	return project, err
 }
 
-func (c *Client) DeleteProject(ctx context.Context, projectName string) error {
-	return c.sendRequest(ctx, "DELETE", fmt.Sprintf("/projects/%s/", projectName), nil, nil)
+func (c *Client) DeleteProject(ctx context.Context, slug string) error {
+	return c.sendRequest(ctx, "DELETE", fmt.Sprintf("/projects/%s/", slug), nil, nil)
 }
 
 func (c *Client) CreateProject(ctx context.Context, createProject CreateUpdateProject) (string, error) {
@@ -126,15 +126,15 @@ func (c *Client) CreateProject(ctx context.Context, createProject CreateUpdatePr
 		return "", err
 	}
 	// API requires a create then patch to set all values
-	return project.Slug, c.UpdateProject(ctx, createProject)
+	return project.Slug, c.UpdateProject(ctx, project.Slug, createProject)
 }
 
-func (c *Client) UpdateProject(ctx context.Context, updateProject CreateUpdateProject) error {
+func (c *Client) UpdateProject(ctx context.Context, slug string, updateProject CreateUpdateProject) error {
 	UpdateProjectJSON, err := json.Marshal(updateProject)
 	if err != nil {
 		return err
 	}
-	return c.sendRequest(ctx, "PATCH", "/projects/", UpdateProjectJSON, nil)
+	return c.sendRequest(ctx, "PATCH", fmt.Sprintf("/projects/%s/", slug), UpdateProjectJSON, nil)
 }
 
 func (c *Client) sendRequest(ctx context.Context, method string, url string, body []byte, result interface{}) error {
