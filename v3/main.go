@@ -111,6 +111,12 @@ func (c *Client) GetProject(ctx context.Context, projectName string) (Project, e
 	return project, err
 }
 
+func (c *Client) DeleteProject(ctx context.Context, projectName string) (Project, error) {
+	project := Project{}
+	err := c.sendRequest(ctx, "DELETE", fmt.Sprintf("/projects/%s/", projectName), nil, &project)
+	return project, err
+}
+
 func (c *Client) CreateProject(ctx context.Context, createProject CreateUpdateProject) (Project, error) {
 	project := Project{}
 	createProjectJson, err := json.Marshal(createProject.CreateProject)
