@@ -75,15 +75,17 @@ type Project struct {
 	ActiveVersions map[string]string `json:"active_versions"`
 }
 
+type Repository struct {
+	URL  string `json:"url"`
+	Type string `json:"type"`
+}
+
 type CreateProject struct {
-	Name       string `json:"name"`
-	Repository struct {
-		URL  string `json:"url"`
-		Type string `json:"type"`
-	} `json:"repository"`
-	Homepage            string `json:"homepage"`
-	ProgrammingLanguage string `json:"programming_language"`
-	Language            string `json:"language"`
+	Name                string     `json:"name"`
+	Repository          Repository `json:"repository"`
+	Homepage            string     `json:"homepage"`
+	ProgrammingLanguage string     `json:"programming_language"`
+	Language            string     `json:"language"`
 }
 
 type CreateUpdateProject struct {
