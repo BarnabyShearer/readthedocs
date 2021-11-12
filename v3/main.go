@@ -75,7 +75,7 @@ type Project struct {
 	ActiveVersions map[string]string `json:"active_versions"`
 }
 
-type createProject struct {
+type CreateProject struct {
 	Name       string `json:"name"`
 	Repository struct {
 		URL  string `json:"url"`
@@ -87,7 +87,7 @@ type createProject struct {
 }
 
 type CreateUpdateProject struct {
-	createProject
+	CreateProject
 	DefaultVersion        string `json:"default_version"`
 	DefaultBranch         string `json:"default_branch"`
 	AnalyticsCode         string `json:"analytics_code"`
@@ -111,7 +111,7 @@ func (c *Client) GetProject(ctx context.Context, projectName string) (Project, e
 
 func (c *Client) CreateProject(ctx context.Context, createProject CreateUpdateProject) (Project, error) {
 	project := Project{}
-	createProjectJson, err := json.Marshal(createProject.createProject)
+	createProjectJson, err := json.Marshal(createProject.CreateProject)
 	if err != nil {
 		return project, err
 	}
