@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -29,10 +30,6 @@ func NewClient(apiKey string) *Client {
 			Timeout: time.Minute,
 		},
 	}
-}
-
-type errorResponse struct {
-	Detail string `json:"detail"`
 }
 
 type projects struct {
@@ -156,12 +153,11 @@ func (c *Client) sendRequest(ctx context.Context, method string, url string, bod
 	defer res.Body.Close()
 
 	if res.StatusCode < http.StatusOK || res.StatusCode >= http.StatusBadRequest {
-		var errRes errorResponse
-		if err = json.NewDecoder(res.Body).Decode(&errRes); err == nil {
-			return errors.New(errRes.Detail)
+		bodyBytes, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			return err
 		}
-
-		return fmt.Errorf("unknown error, status code: %d", res.StatusCode)
+		return errors.New(string(bodyBytes))
 	}
 
 	if result != nil {
