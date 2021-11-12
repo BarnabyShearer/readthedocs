@@ -80,16 +80,16 @@ type Repository struct {
 type CreateProject struct {
 	Name                string     `json:"name"`
 	Repository          Repository `json:"repository"`
-	Homepage            string     `json:"homepage"`
-	ProgrammingLanguage string     `json:"programming_language"`
-	Language            string     `json:"language"`
+	Homepage            string     `json:"homepage,omitempty"`
+	ProgrammingLanguage string     `json:"programming_language,omitempty"`
+	Language            string     `json:"language,omitempty"`
 }
 
 type CreateUpdateProject struct {
 	CreateProject
-	DefaultVersion        string `json:"default_version"`
-	DefaultBranch         string `json:"default_branch"`
-	AnalyticsCode         string `json:"analytics_code"`
+	DefaultVersion        string `json:"default_version,omitempty"`
+	DefaultBranch         string `json:"default_branch,omitempty"`
+	AnalyticsCode         string `json:"analytics_code,omitempty"`
 	AnalyticsDisabled     bool   `json:"analytics_disabled"`
 	ShowVersionWarning    bool   `json:"show_version_warning"`
 	SingleVersion         bool   `json:"single_version"`
