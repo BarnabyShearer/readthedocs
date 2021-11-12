@@ -111,34 +111,29 @@ func (c *Client) GetProject(ctx context.Context, projectName string) (Project, e
 	return project, err
 }
 
-func (c *Client) DeleteProject(ctx context.Context, projectName string) (Project, error) {
-	project := Project{}
-	err := c.sendRequest(ctx, "DELETE", fmt.Sprintf("/projects/%s/", projectName), nil, &project)
-	return project, err
+func (c *Client) DeleteProject(ctx context.Context, projectName string) error {
+	return c.sendRequest(ctx, "DELETE", fmt.Sprintf("/projects/%s/", projectName), nil, nil)
 }
 
-func (c *Client) CreateProject(ctx context.Context, createProject CreateUpdateProject) (Project, error) {
-	project := Project{}
+func (c *Client) CreateProject(ctx context.Context, createProject CreateUpdateProject) error {
 	createProjectJson, err := json.Marshal(createProject.CreateProject)
 	if err != nil {
-		return project, err
+		return err
 	}
-	err = c.sendRequest(ctx, "POST", "/projects/", createProjectJson, &project)
+	err = c.sendRequest(ctx, "POST", "/projects/", createProjectJson, nil)
 	if err != nil {
-		return project, err
+		return err
 	}
 	// API requires a create then patch to set all values
 	return c.UpdateProject(ctx, createProject)
 }
 
-func (c *Client) UpdateProject(ctx context.Context, updateProject CreateUpdateProject) (Project, error) {
-	project := Project{}
+func (c *Client) UpdateProject(ctx context.Context, updateProject CreateUpdateProject) error {
 	UpdateProjectJSON, err := json.Marshal(updateProject)
 	if err != nil {
-		return project, err
+		return err
 	}
-	err = c.sendRequest(ctx, "PATCH", "/projects/", UpdateProjectJSON, &project)
-	return project, err
+	return c.sendRequest(ctx, "PATCH", "/projects/", UpdateProjectJSON, nil)
 }
 
 func (c *Client) sendRequest(ctx context.Context, method string, url string, body []byte, result interface{}) error {
@@ -168,8 +163,10 @@ func (c *Client) sendRequest(ctx context.Context, method string, url string, bod
 		return fmt.Errorf("unknown error, status code: %d", res.StatusCode)
 	}
 
-	if err = json.NewDecoder(res.Body).Decode(result); err != nil {
-		return err
+	if result != nil {
+		if err = json.NewDecoder(res.Body).Decode(result); err != nil {
+			return err
+		}
 	}
 
 	return nil
