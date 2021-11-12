@@ -115,17 +115,18 @@ func (c *Client) DeleteProject(ctx context.Context, projectName string) error {
 	return c.sendRequest(ctx, "DELETE", fmt.Sprintf("/projects/%s/", projectName), nil, nil)
 }
 
-func (c *Client) CreateProject(ctx context.Context, createProject CreateUpdateProject) error {
+func (c *Client) CreateProject(ctx context.Context, createProject CreateUpdateProject) (string, error) {
+	project := Project{}
 	createProjectJson, err := json.Marshal(createProject.CreateProject)
 	if err != nil {
-		return err
+		return "", err
 	}
-	err = c.sendRequest(ctx, "POST", "/projects/", createProjectJson, nil)
+	err = c.sendRequest(ctx, "POST", "/projects/", createProjectJson, &project)
 	if err != nil {
-		return err
+		return "", err
 	}
 	// API requires a create then patch to set all values
-	return c.UpdateProject(ctx, createProject)
+	return project.Slug, c.UpdateProject(ctx, createProject)
 }
 
 func (c *Client) UpdateProject(ctx context.Context, updateProject CreateUpdateProject) error {
