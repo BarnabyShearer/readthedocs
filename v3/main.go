@@ -12,9 +12,6 @@ import (
 	"time"
 )
 
-// APIs default base URL.
-const BaseURLV3 = "https://readthedocs.org/api/v3"
-
 type Client struct {
 	BaseURL    string
 	apiKey     string
@@ -22,9 +19,9 @@ type Client struct {
 }
 
 // Create the API client, providing the authentication key.
-func NewClient(apiKey string) *Client {
+func NewClient(apiKey string, baseUrl string) *Client {
 	return &Client{
-		BaseURL: BaseURLV3,
+		BaseURL: baseUrl,
 		apiKey:  apiKey,
 		HTTPClient: &http.Client{
 			Timeout: time.Minute,
@@ -83,6 +80,8 @@ type CreateProject struct {
 	Homepage            string     `json:"homepage,omitempty"`
 	ProgrammingLanguage string     `json:"programming_language,omitempty"`
 	Language            string     `json:"language,omitempty"`
+	Organization        string     `json:"organization,omitempty"`
+	Teams               string     `json:"teams,omitempty"`
 }
 
 type CreateUpdateProject struct {

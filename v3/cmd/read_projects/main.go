@@ -3,6 +3,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -10,8 +11,11 @@ import (
 	"github.com/BarnabyShearer/readthedocs/v3"
 )
 
+var apiBaseUrlFlag = flag.String("base_url", "https://readthedocs.org/api/v3", "ReadTheDocs API base URL. Can be used to target the Read The Docs For Business API.")
+
 func main() {
-	client := readthedocs.NewClient(os.Getenv("READTHEDOCS_TOKEN"))
+	flag.Parse()
+	client := readthedocs.NewClient(os.Getenv("READTHEDOCS_TOKEN"), *apiBaseUrlFlag)
 	projects, err := client.GetProjects(context.Background())
 	if err != nil {
 		log.Fatal(err)
