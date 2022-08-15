@@ -12,14 +12,22 @@ import (
 	"time"
 )
 
+// APIs default base URL.
+const BaseURLV3 = "https://readthedocs.org/api/v3"
+
 type Client struct {
 	BaseURL    string
 	apiKey     string
 	HTTPClient *http.Client
 }
 
-// Create the API client, providing the authentication key.
-func NewClient(apiKey string, baseUrl string) *Client {
+// Create the API client using the default URL, providing the authentication key.
+func NewClient(apiKey string) *Client {
+	return NewClientWithURL(apiKey, BaseURLV3)
+}
+
+// Create the API client using a custom URL, providing the authentication key.
+func NewClientWithURL(apiKey string, baseUrl string) *Client {
 	return &Client{
 		BaseURL: baseUrl,
 		apiKey:  apiKey,

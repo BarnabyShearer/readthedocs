@@ -22,7 +22,7 @@ func main() {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
-	client := readthedocs.NewClient(os.Getenv("READTHEDOCS_TOKEN"), *apiBaseUrlFlag)
+	client := readthedocs.NewClientWithURL(os.Getenv("READTHEDOCS_TOKEN"), *apiBaseUrlFlag)
 	slug, err := client.CreateProject(context.Background(), readthedocs.CreateUpdateProject{
 		CreateProject:         readthedocs.CreateProject{Name: *nameFlag, Repository: readthedocs.Repository{URL: *repositoryFlag, Type: "git"}, Organization: *organizationFlag},
 		DefaultVersion:        "latest",

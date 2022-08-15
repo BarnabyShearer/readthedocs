@@ -15,7 +15,7 @@ var apiBaseUrlFlag = flag.String("base_url", "https://readthedocs.org/api/v3", "
 
 func main() {
 	flag.Parse()
-	client := readthedocs.NewClient(os.Getenv("READTHEDOCS_TOKEN"), *apiBaseUrlFlag)
+	client := readthedocs.NewClientWithURL(os.Getenv("READTHEDOCS_TOKEN"), *apiBaseUrlFlag)
 	projects, err := client.GetProjects(context.Background())
 	if err != nil {
 		log.Fatal(err)
