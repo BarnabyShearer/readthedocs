@@ -21,10 +21,15 @@ type Client struct {
 	HTTPClient *http.Client
 }
 
-// Create the API client, providing the authentication key.
+// Create the API client using the default URL, providing the authentication key.
 func NewClient(apiKey string) *Client {
+	return NewClientWithURL(apiKey, BaseURLV3)
+}
+
+// Create the API client using a custom URL, providing the authentication key.
+func NewClientWithURL(apiKey string, baseUrl string) *Client {
 	return &Client{
-		BaseURL: BaseURLV3,
+		BaseURL: baseUrl,
 		apiKey:  apiKey,
 		HTTPClient: &http.Client{
 			Timeout: time.Minute,
@@ -83,6 +88,8 @@ type CreateProject struct {
 	Homepage            string     `json:"homepage,omitempty"`
 	ProgrammingLanguage string     `json:"programming_language,omitempty"`
 	Language            string     `json:"language,omitempty"`
+	Organization        string     `json:"organization,omitempty"`
+	Teams               string     `json:"teams,omitempty"`
 }
 
 type CreateUpdateProject struct {
